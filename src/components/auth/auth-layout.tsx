@@ -1,7 +1,4 @@
-'use client';
-
-import { MainNav } from '@/components/main-nav';
-import { Goku } from "@/app/(marketing)/page";
+import { MainNav } from "@/components/main-nav";
 
 export default function AuthLayout({
   children,
@@ -12,8 +9,8 @@ export default function AuthLayout({
     <div className="flex flex-col min-h-screen">
       <MainNav />
       <div className="flex-1 flex flex-col md:flex-row">
-        <div className="hidden lg:block lg:w-1/2 bg-black">
-          <Goku />
+        <div className="hidden lg:block lg:w-1/2 bg-black relative">
+          {/* Your Goku component or other content */}
         </div>
         <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
           {children}

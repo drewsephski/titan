@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import { siteConfig } from "@/config/site.config";
 import { cn } from "@/lib/utils";
 import RootProviders from "@/components/providers";
+import { ParticlesBackground } from "@/components/particles-background";
 
 const fontSans = Manrope({
   variable: "--font-sans",
@@ -60,23 +61,23 @@ export const metadata: Metadata = {
   },
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="h-full" suppressHydrationWarning>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
           fontSans.variable,
-          fontHeading.variable,
-          fontMono.variable
+          fontMono.variable,
+          fontHeading.variable
         )}
       >
         <RootProviders>
+          <ParticlesBackground />
           {children}
         </RootProviders>
       </body>

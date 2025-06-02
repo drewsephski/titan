@@ -83,6 +83,7 @@ docker-compose up -d
 ```
 
 Use the following environment variables in `.env` file:
+
 - `DATABASE_URL`: `postgres://postgres:postgres@localhost:5432/titan`
 
 Add the `pg` and `@types/pg` dependencies to your project:

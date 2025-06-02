@@ -1,0 +1,126 @@
+import React from 'react';
+import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
+import { BookOpen, Clock, User } from 'lucide-react';
+import { Showcase3D } from '@/components/3d-showcase';
+
+const blogPosts = [
+  {
+    id: 1,
+    title: 'The Future of Web Development in 2025',
+    excerpt: 'Exploring the latest trends and technologies shaping the future of web development, from AI-powered tools to the rise of edge computing and beyond.',
+    author: 'Drew Sepeczi',
+    readTime: '5 min read',
+    date: 'May 28, 2025'
+  },
+  {
+    id: 2,
+    title: 'Mastering React Server Components',
+    excerpt: 'A deep dive into React Server Components, how they work, and how they can improve your application performance and user experience.',
+    author: 'Drew Sepeczi',
+    readTime: '7 min read',
+    date: 'May 20, 2025'
+  },
+  {
+    id: 3,
+    title: 'Building Accessible Web Applications',
+    excerpt: 'Learn the best practices for creating web applications that are accessible to all users, including those with disabilities.',
+    author: 'Drew Sepeczi',
+    readTime: '6 min read',
+    date: 'May 15, 2025'
+  }
+];
+
+const BlogPage = () => {
+  const welcomeText = `Welcome to the Titan Blog. Discover insights, tutorials, and stories about web development, design, and technology.`;
+
+  return (
+    <div className="container mx-auto py-12 px-4">
+      <div className="max-w-4xl mx-auto text-center mb-16">
+        <h1 className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60 mb-6 pb-2">
+          Titan Blog
+        </h1>
+        <div className="text-xl text-muted-foreground">
+          <TextGenerateEffect words={welcomeText} duration={0.8} />
+        </div>
+      </div>
+
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {blogPosts.map((post) => (
+          <article
+            key={post.id}
+            className="group relative rounded-lg border p-6 shadow-sm transition-all hover:shadow-md dark:border-gray-800"
+          >
+            <div className="flex flex-col justify-between space-y-4">
+              <div className="space-y-2">
+                <h2 className="text-xl font-bold tracking-tight">
+                  <a
+                    href={`/blog/${post.id}`}
+                    className="before:absolute before:inset-0"
+                  >
+                    {post.title}
+                  </a>
+                </h2>
+                <p className="text-muted-foreground">{post.excerpt}</p>
+              </div>
+
+              <div className="flex items-center justify-between text-sm text-muted-foreground">
+                <div className="flex items-center space-x-2">
+                  <User className="h-4 w-4" />
+                  <span>{post.author}</span>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-1">
+                    <Clock className="h-4 w-4" />
+                    <span>{post.readTime}</span>
+                  </div>
+                  <time dateTime={post.date}>{post.date}</time>
+                </div>
+              </div>
+
+              <div className="flex items-center text-sm font-medium text-primary">
+                <span>Read more</span>
+                <svg
+                  className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div className="mt-16 text-center">
+        <button className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+          <BookOpen className="mr-2 h-4 w-4" />
+          View all articles
+        </button>
+      </div>
+
+      {/* 3D Showcase Section */}
+      <div className="mt-24">
+        <h2 className="text-3xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+          Interactive 3D Experience
+        </h2>
+        <div className="rounded-xl overflow-hidden">
+          <Showcase3D 
+            title="Explore in 3D"
+            description="Interact with our 3D scene to see how we bring designs to life. Rotate, zoom, and explore the details of our interactive models."
+            height="600px"
+            className="border-none shadow-lg"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BlogPage;
