@@ -11,17 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'pnpm'
+      - name: Install Bun
+        run: curl -fsSL https://bun.sh/install | bash
       
       - name: Install dependencies
-        run: pnpm install
+        run: bun install
       
       - name: Build
-        run: pnpm build
+        run: bun run build
       
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
