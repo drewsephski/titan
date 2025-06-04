@@ -9,10 +9,22 @@ import { cn } from "@/lib/utils";
 import { PanelsTopLeft, Shield, Database, Server, Component, Code, ArrowRight, Sparkle, Github, Copy, Check, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
+import { OnboardingDialog } from "@/components/onboarding/onboarding-dialog";
+import { DialogTrigger } from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const { data: session, isPending } = useSession();
+  const router = useRouter();
+
+  const handleOnboardingComplete = () => {
+    setIsOnboardingOpen(false);
+    if (session) {
+      router.push('/dashboard');
+    }
+  };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(`git clone ${siteConfig.socials.github}`);
@@ -64,33 +76,48 @@ export default function Home() {
             </div>
             <div id="hero" className="flex flex-col p-4">
               <h1 className="head-text-md">Titan</h1>
-              <p className="text-muted-foreground max-w-3xl">{siteConfig.description}</p>
+              <p className="text-muted-foreground max-w-xl mt-2 text-sm">{siteConfig.description}</p>
             </div>
+
+
             <div id="code" className="flex flex-col p-4">
               <div className="p-2 border border-dashed hover:border-primary/50 bg-card text-xs md:text-sm flex items-center justify-between transition-all duration-200 delay-75">
                 <pre className="font-mono bg-linear-to-r from-muted-foreground to-foreground bg-clip-text text-transparent">
                   git clone {siteConfig.socials.github}
                 </pre>
                 <Button variant="ghost" size="icon" className="size-5 cursor-pointer group/copy" onClick={handleCopy}>
-                  {copied ? <Check className="size-3" /> : <Copy className="size-3 group-hover/copy:text-foreground" />}
+                  {copied ? <Check className="size-4" /> : <Copy className="size-4 group-hover/copy:text-foreground" />}
                 </Button>
               </div>
             </div>
-            <div id="cta" className="flex items-center gap-4 p-4">
-              <Button variant="outline" asChild className="relative border-dashed">
-                <a href={siteConfig.socials.github} target="_blank" className="gap-2 group">
-                  <div className="w-full h-[1px] bg-linear-to-r from-primary/0 via-primary to-primary/0 absolute top-0 -left-1/2 translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                  <Github className="size-4" />
-                  <span>GitHub</span>
-                </a>
-              </Button>
-              <Button asChild>
-                <Link href="/dashboard" className="gap-2 group">
+            <div id="cta" className="flex items-center gap-4 p-4 border-b border-dashed">
+              <div className="flex-1">
+                <Button variant="outline" asChild className="relative border-dashed">
+                  <a href={siteConfig.socials.github} target="_blank" className="gap-2 group">
+                    <div className="w-full h-[1px] bg-linear-to-r from-primary/0 via-primary to-primary/0 absolute top-0 -left-1/2 translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                    <Github className="size-4" />
+                    <span>GitHub</span>
+                  </a>
+                </Button>
+              </div>
+              <div className="flex-6">
+                <Button
+                  variant="default"
+                  className="border-dashed flex items-center justify-center gap-2 group"
+                  onClick={() => setIsOnboardingOpen(true)}
+                >
                   <span>Get started</span>
                   <ArrowRight className="size-4 group-hover:translate-x-1 transition-all duration-150" />
-                </Link>
-              </Button>
+                </Button>
+              </div>
             </div>
+
+            {/* Onboarding Dialog */}
+            <OnboardingDialog
+              open={isOnboardingOpen}
+              onOpenChange={setIsOnboardingOpen}
+              onComplete={handleOnboardingComplete}
+            />
           </div>
         </div>
         <div id="grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-dashed">

@@ -2,13 +2,23 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import Link from 'next/link';
 import { Icons } from '@/components/icons';
 import { siteConfig } from '@/config/site.config';
-import { ArrowRight, BookOpen, Zap, Download, Key, Database, Code, Cloud, Settings, HelpCircle, Github } from 'lucide-react';
+import { BookOpen, Zap, Download, Key, Database, Code, Cloud, Settings, HelpCircle, Github, Newspaper, Phone, ArrowRight } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 // Type for the icon names to ensure type safety
-type IconName = keyof typeof Icons;
+type IconName = keyof typeof sectionIcons;
 
 // Icon mapping for documentation sections
 const sectionIcons: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -21,19 +31,23 @@ const sectionIcons: Record<string, React.ComponentType<{ className?: string }>> 
   cloud: Cloud,
   settings: Settings,
   helpCircle: HelpCircle,
+  newspaper: Newspaper,
+  phone: Phone,
   github: Github,
   arrowRight: ArrowRight,
 };
 
+interface SectionItem {
+  title: string;
+  href: string;
+  icon: string;
+  description?: string;
+}
+
 interface Section {
   id: string;
   title: string;
-  items: {
-    title: string;
-    href: string;
-    icon: string;
-    description?: string;
-  }[];
+  items: SectionItem[];
 }
 
 const docsSections: Section[] = [
@@ -142,8 +156,10 @@ export default function DocsPage() {
     }
   }, []);
 
-  const scrollToSection = (e: React.MouseEvent, id: string) => {
-    e.preventDefault();
+  const scrollToSection = (e: React.MouseEvent | null, id: string) => {
+    if (e) {
+      e.preventDefault();
+    }
     const element = document.getElementById(id);
     if (element) {
       window.history.pushState({}, '', `#${id}`);
@@ -153,8 +169,9 @@ export default function DocsPage() {
   };
 
   // Helper function to render icon
-  const renderIcon = (iconName: string) => {
-    const Icon = sectionIcons[iconName] || Icons.file;
+  const renderIcon = (iconName: IconName) => {
+    const Icon = sectionIcons[iconName];
+    if (!Icon) return null;
     return (
       <div className="mr-3 p-2 rounded-lg bg-primary/10 text-primary">
         <Icon className="h-5 w-5" />
@@ -170,13 +187,13 @@ export default function DocsPage() {
           <aside className="hidden lg:block lg:col-span-3 xl:col-span-2">
             <nav className="sticky top-24 space-y-8 overflow-y-auto max-h-[calc(100vh-8rem)] pr-2 -mr-2">
               <div className="space-y-2 mb-6">
-                <Link
-                  href="/"
-                  className="flex items-center text-sm font-medium text-foreground hover:text-primary transition-colors"
+                <div
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  className="flex items-center text-sm font-medium text-foreground hover:text-primary transition-colors cursor-pointer"
                 >
                   <Icons.chevronLeft className="mr-2 h-4 w-4" />
-                  Back to Home
-                </Link>
+                  Back to Top
+                </div>
               </div>
 
               {docsSections.map((section) => (
@@ -185,24 +202,38 @@ export default function DocsPage() {
                     {section.title}
                   </h2>
                   <ul className="space-y-1">
-                    {section.items.map((item) => {
-                      const isActive = pathname === item.href;
-                      return (
-                        <li key={item.href}>
-                          <Link
-                            href={item.href}
-                            className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                              isActive
-                                ? 'bg-primary/10 text-primary'
-                                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                            }`}
-                          >
-                            {renderIcon(item.icon)}
-                            {item.title}
-                          </Link>
-                        </li>
-                      );
-                    })}
+                    {section.items.map((item) => (
+                      <li key={item.href}>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <div
+                              onClick={(e) => scrollToSection(e, item.href.split('#')[1] || item.href)}
+                              className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer hover:bg-muted/50 ${
+                                activeSection === item.href.split('#')[1] || activeSection === item.href
+                                  ? 'bg-primary/10 text-primary'
+                                  : 'text-muted-foreground'
+                              }`}
+                            >
+                              {renderIcon(item.icon)}
+                              <span className="flex-1">{item.title}</span>
+                              <ArrowRight className="ml-2 h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
+                            </div>
+                          </DialogTrigger>
+                          {item.description && (
+                            <DialogContent className="sm:max-w-[800px] bg-card border border-border shadow-lg rounded-2xl p-8">
+                              <DialogHeader>
+                                <DialogTitle>{item.title}</DialogTitle>
+                              </DialogHeader>
+                              <DialogDescription>
+                                <div className="prose max-w-none">
+                                  <p>{item.description}</p>
+                                </div>
+                              </DialogDescription>
+                            </DialogContent>
+                          )}
+                        </Dialog>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               ))}
@@ -212,8 +243,8 @@ export default function DocsPage() {
           {/* Main Content */}
           <main className="lg:col-span-9 xl:col-span-7">
             <div className="prose dark:prose-invert max-w-none">
-              <h1 id="documentation" className="scroll-mt-24">Documentation</h1>
-              <p className="lead">
+              <h1 id="documentation" className="scroll-mt-24 text-3xl font-bold mb-6">Documentation</h1>
+              <p className="text-muted-foreground mb-4 text-lg">
                 Welcome to the {siteConfig.name} documentation. Here you'll find comprehensive
                 guides and documentation to help you get started and make the most of our platform.
               </p>
@@ -228,16 +259,32 @@ export default function DocsPage() {
                         {renderIcon(item.icon)}
                         <h3 className="text-lg font-semibold">{item.title}</h3>
                       </div>
-                      <p className="text-muted-foreground mb-4">
+                      <p className="text-muted-foreground mb-4 text-md">
                         {item.description}
                       </p>
-                      <Link
-                        href={item.href}
-                        className="inline-flex items-center text-sm font-medium text-primary hover:underline"
-                      >
-                        Read more
-                        <ArrowRight className="ml-1 h-4 w-4" />
-                      </Link>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <div
+                            onClick={() => scrollToSection(null, item.href.split('#')[1] || item.href)}
+                            className="inline-flex items-center text-sm font-medium text-primary hover:underline cursor-pointer"
+                          >
+                            {item.title}
+                            <ArrowRight className="ml-1 h-4 w-4" />
+                          </div>
+                        </DialogTrigger>
+                        {item.description && (
+                          <DialogContent className="sm:max-w-[800px] bg-card border border-border shadow-lg rounded-2xl p-8">
+                            <DialogHeader>
+                              <DialogTitle>{item.title}</DialogTitle>
+                            </DialogHeader>
+                            <DialogDescription>
+                              <div className="prose max-w-none">
+                                <p>{item.description}</p>
+                              </div>
+                            </DialogDescription>
+                          </DialogContent>
+                        )}
+                      </Dialog>
                     </div>
                   ))}
                 </div>
@@ -248,22 +295,38 @@ export default function DocsPage() {
                 <h2 className="text-2xl font-bold mb-6">Core Concepts</h2>
                 <div className="grid gap-6 md:grid-cols-2">
                   {docsSections[1].items.map((item) => (
-                    <div key={item.href} className="rounded-lg border p-6 hover:shadow-md transition-shadow">
-                      <div className="flex items-center mb-3">
-                        {renderIcon(item.icon)}
-                        <h3 className="text-lg font-semibold">{item.title}</h3>
-                      </div>
-                      <p className="text-muted-foreground mb-4">
-                        {item.description}
-                      </p>
-                      <Link
-                        href={item.href}
-                        className="inline-flex items-center text-sm font-medium text-primary hover:underline"
-                      >
-                        Learn more
-                        <ArrowRight className="ml-1 h-4 w-4" />
-                      </Link>
-                    </div>
+                    <Dialog key={item.href}>
+                      <DialogTrigger asChild>
+                        <div className="rounded-lg border p-6 hover:shadow-md transition-shadow">
+                          <div className="flex items-center mb-3">
+                            {renderIcon(item.icon)}
+                            <h3 className="text-lg font-semibold">{item.title}</h3>
+                          </div>
+                          <p className="text-muted-foreground mb-4 text-md">
+                            {item.description}
+                          </p>
+                          <div
+                            onClick={(e) => scrollToSection(e, item.href.split('#')[1] || item.href)}
+                            className="inline-flex items-center text-sm font-medium text-primary hover:underline cursor-pointer"
+                          >
+                            Learn more
+                            <ArrowRight className="ml-1 h-4 w-4" />
+                          </div>
+                        </div>
+                      </DialogTrigger>
+                      {item.description && (
+                        <DialogContent className="sm:max-w-[800px] bg-card border border-border shadow-lg rounded-2xl p-8">
+                          <DialogHeader>
+                            <DialogTitle>{item.title}</DialogTitle>
+                          </DialogHeader>
+                          <DialogDescription>
+                            <div className="prose max-w-none">
+                              <p>{item.description}</p>
+                            </div>
+                          </DialogDescription>
+                        </DialogContent>
+                      )}
+                    </Dialog>
                   ))}
                 </div>
               </section>
@@ -273,22 +336,38 @@ export default function DocsPage() {
                 <h2 className="text-2xl font-bold mb-6">Guides</h2>
                 <div className="grid gap-6 md:grid-cols-2">
                   {docsSections[2].items.map((item) => (
-                    <div key={item.href} className="rounded-lg border p-6 hover:shadow-md transition-shadow">
-                      <div className="flex items-center mb-3">
-                        {renderIcon(item.icon)}
-                        <h3 className="text-lg font-semibold">{item.title}</h3>
-                      </div>
-                      <p className="text-muted-foreground mb-4">
-                        {item.description}
-                      </p>
-                      <Link
-                        href={item.href}
-                        className="inline-flex items-center text-sm font-medium text-primary hover:underline"
-                      >
-                        View guide
-                        <ArrowRight className="ml-1 h-4 w-4" />
-                      </Link>
-                    </div>
+                    <Dialog key={item.href}>
+                      <DialogTrigger asChild>
+                        <div className="rounded-lg border p-6 hover:shadow-md transition-shadow">
+                          <div className="flex items-center mb-3">
+                            {renderIcon(item.icon)}
+                            <h3 className="text-lg font-semibold">{item.title}</h3>
+                          </div>
+                          <p className="text-muted-foreground mb-4">
+                            {item.description}
+                          </p>
+                          <div
+                            onClick={(e) => scrollToSection(e, item.href.split('#')[1] || item.href)}
+                            className="inline-flex items-center text-sm font-medium text-primary hover:underline cursor-pointer"
+                          >
+                            View guide
+                            <ArrowRight className="ml-1 h-4 w-4" />
+                          </div>
+                        </div>
+                      </DialogTrigger>
+                      {item.description && (
+                        <DialogContent className="sm:max-w-[800px] bg-card border border-border shadow-lg rounded-2xl p-8">
+                          <DialogHeader>
+                            <DialogTitle>{item.title}</DialogTitle>
+                          </DialogHeader>
+                          <DialogDescription>
+                            <div className="prose max-w-none">
+                              <p>{item.description}</p>
+                            </div>
+                          </DialogDescription>
+                        </DialogContent>
+                      )}
+                    </Dialog>
                   ))}
                 </div>
               </section>
@@ -298,19 +377,50 @@ export default function DocsPage() {
                 <h2 className="text-2xl font-bold mb-4">Need help?</h2>
                 <p className="mb-4">
                   Can't find what you're looking for? Check out our{' '}
-                  <Link href="/faq" className="text-primary hover:underline">
-                    FAQ
-                  </Link>{' '}
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <div
+                        onClick={(e) => scrollToSection(e, 'faq')}
+                        className="text-primary hover:underline cursor-pointer"
+                      >
+                        FAQ
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[800px] bg-card border border-border shadow-lg rounded-2xl p-8">
+                      <DialogHeader>
+                        <DialogTitle>FAQ</DialogTitle>
+                      </DialogHeader>
+                      <DialogDescription>
+                        <div className="prose max-w-none">
+                          <p>Find answers to common questions about our platform.</p>
+                        </div>
+                      </DialogDescription>
+                    </DialogContent>
+                  </Dialog>{' '}
                   or contact our support team for assistance.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 mt-6">
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-                  >
-                    Contact Support
-                  </Link>
-                  <Link
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <div
+                        onClick={(e) => scrollToSection(e, 'contact')}
+                        className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer"
+                      >
+                        Contact Support
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[800px] bg-card border border-border shadow-lg rounded-2xl p-8">
+                      <DialogHeader>
+                        <DialogTitle>Contact Support</DialogTitle>
+                      </DialogHeader>
+                      <DialogDescription>
+                        <div className="prose max-w-none">
+                          <p>Get in touch with our support team for help with any issues.</p>
+                        </div>
+                      </DialogDescription>
+                    </DialogContent>
+                  </Dialog>
+                  <a
                     href="https://github.com/your-org/your-repo/issues"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -318,7 +428,7 @@ export default function DocsPage() {
                   >
                     <Github className="mr-2 h-4 w-4" />
                     Open an Issue
-                  </Link>
+                  </a>
                 </div>
               </section>
             </div>
@@ -339,7 +449,7 @@ export default function DocsPage() {
                         <a
                           href={`#${section.id}`}
                           onClick={(e) => scrollToSection(e, section.id)}
-                          className={`block py-1 text-sm transition-colors ${
+                          className={`block py-2 text-sm transition-colors ${
                             isActive
                               ? 'text-primary font-medium'
                               : 'text-muted-foreground hover:text-foreground'
@@ -362,31 +472,31 @@ export default function DocsPage() {
                 </h3>
                 <ul className="space-y-2">
                   <li>
-                    <Link
-                      href="/blog"
-                      className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    <div
+                      onClick={() => scrollToSection(null, 'blog')}
+                      className="flex items-center py-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                     >
                       <Icons.newspaper className="mr-2 h-4 w-4 flex-shrink-0" />
                       Blog
-                    </Link>
+                    </div>
                   </li>
                   <li>
-                    <Link
-                      href="/changelog"
-                      className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    <div
+                      onClick={() => scrollToSection(null, 'changelog')}
+                      className="flex items-center py-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                     >
                       <Icons.gitCommit className="mr-2 h-4 w-4 flex-shrink-0" />
                       Changelog
-                    </Link>
+                    </div>
                   </li>
                   <li>
-                    <Link
-                      href="/community"
-                      className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    <div
+                      onClick={() => scrollToSection(null, 'community')}
+                      className="flex items-center py-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                     >
                       <Icons.users className="mr-2 h-4 w-4 flex-shrink-0" />
                       Community
-                    </Link>
+                    </div>
                   </li>
                 </ul>
               </div>

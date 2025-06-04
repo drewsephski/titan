@@ -2,7 +2,19 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Icons } from '@/components/icons'; // Assuming Icons are needed, though not in the TOC itself
+import { DocsIcon } from './DocsIcon';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Icons } from './icons';
 
 interface DocsSection {
   title: string;
@@ -10,6 +22,7 @@ interface DocsSection {
     title: string;
     href: string;
     icon: keyof typeof Icons;
+    content?: string; // Optional content for dialog
   }[];
 }
 
@@ -77,6 +90,13 @@ export default function DocsTableOfContents({ sections }: DocsTableOfContentsPro
     };
   }, [sections]); // Re-run effect if sections change
 
+  // Handle smooth scrolling
+  const handleScroll = (href: string) => {
+    const element = document.getElementById(href.substring(1));
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   return (
     <div className="sticky top-24 space-y-4">
@@ -86,33 +106,72 @@ export default function DocsTableOfContents({ sections }: DocsTableOfContentsPro
       <ul className="space-y-2 text-sm">
         {sections.map((section) => (
           <li key={section.title}>
-            <Link
-              href={`#${section.title.toLowerCase().replace(/\s+/g, '-')}`}
-              className={`hover:underline ${
+            <div
+              onClick={() => handleScroll(`#${section.title.toLowerCase().replace(/\s+/g, '-')}`)}
+              className={cn(
+                'flex items-center gap-2 hover:bg-accent rounded-md p-2 transition-colors cursor-pointer',
                 activeId === section.title.toLowerCase().replace(/\s+/g, '-')
-                  ? 'text-primary' // Active state class
-                  : 'text-muted-foreground hover:text-foreground' // Default state classes
-              }`}
-              aria-label={`Jump to ${section.title} section`}
+                  ? 'text-primary'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
             >
-              {section.title}
-            </Link>
+              <ChevronRight className="h-4 w-4 text-muted-foreground transition-transform hover:translate-x-1" />
+              <span className="flex-1">{section.title}</span>
+            </div>
           </li>
         ))}
-         {/* Add the "Need help?" link manually as it's not part of docsSections */}
-         <li>
-            <Link
-              href="#need-help"
-              className={`hover:underline ${
-                activeId === 'need-help'
-                  ? 'text-primary' // Active state class
-                  : 'text-muted-foreground hover:text-foreground' // Default state classes
-              }`}
-              aria-label="Jump to Need help? section"
-            >
-              Need help?
-            </Link>
+        {sections.map((section) => (
+          <li key={section.title} className="space-y-2">
+            {section.items.map((item) => (
+              <Dialog key={item.href}>
+                <DialogTrigger asChild>
+                  <div className="flex items-center gap-2 hover:bg-accent rounded-md p-2 transition-colors cursor-pointer">
+                    <DocsIcon icon={item.icon} className="w-4 h-4 text-muted-foreground" />
+                    <span
+                      onClick={() => handleScroll(item.href)}
+                      className={cn(
+                        'flex-1',
+                        activeId === item.href.substring(1)
+                          ? 'text-primary'
+                          : 'text-muted-foreground hover:text-foreground'
+                      )}
+                    >
+                      {item.title}
+                    </span>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground transition-transform hover:translate-x-1" />
+                  </div>
+                </DialogTrigger>
+                {item.content && (
+                  <DialogContent className="sm:max-w-[800px] bg-card border border-border shadow-lg rounded-2xl p-8">
+                    <DialogHeader>
+                      <DialogTitle>{item.title}</DialogTitle>
+                    </DialogHeader>
+                    <DialogDescription>
+                      <div className="prose max-w-none">
+                        <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                      </div>
+                    </DialogDescription>
+                  </DialogContent>
+                )}
+              </Dialog>
+            ))}
           </li>
+        ))}
+        {/* Add the "Need help?" link manually as it's not part of docsSections */}
+        <li>
+          <div
+            onClick={() => handleScroll('#need-help')}
+            className={cn(
+              'flex items-center gap-2 hover:bg-accent rounded-md p-2 transition-colors cursor-pointer',
+              activeId === 'need-help'
+                ? 'text-primary'
+                : 'text-muted-foreground hover:text-foreground'
+            )}
+          >
+            <ChevronRight className="h-4 w-4 text-muted-foreground transition-transform hover:translate-x-1" />
+            <span>Need help?</span>
+          </div>
+        </li>
       </ul>
     </div>
   );
