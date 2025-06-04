@@ -6,12 +6,18 @@ import { Button } from "@/components/ui/button";
 import { UserProfile } from "@/components/user-profile";
 import { siteConfig } from "@/config/site.config";
 import { cn } from "@/lib/utils";
-import { PanelsTopLeft, Shield, Database, Server, Component, Code, ArrowRight, Sparkle, Github, Copy, Check, ArrowUpRight } from "lucide-react";
+import { PanelsTopLeft, Shield, Database, Server, Component, Code, ArrowRight, Sparkle, Copy, Check, ArrowUpRight, Github, Menu, BookOpen, User, X } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
 import { OnboardingDialog } from "@/components/onboarding/onboarding-dialog";
-import { DialogTrigger } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
@@ -34,64 +40,71 @@ export default function Home() {
     }, 2000);
   }
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <div className="w-full h-auto md:h-screen overflow-y-auto md:overflow-hidden flex flex-col items-center justify-center">
-      <div className="w-full max-w-7xl mx-auto border border-dashed flex flex-col my-2">
+      <div className="w-full max-w-7xl mx-auto border border-dashed flex flex-col my-2 md:my-4 p-2 md:p-0">
         <div className="w-full flex justify-between divide-x">
           <div className="relative hidden md:flex w-1/3 aspect-square bg-black items-center justify-center group/titan border-dashed">
-            <div className="flex items-center justify-center h-full">
-              <div className="text-4xl font-bold text-primary">Titan</div>
-            </div>
+            <Goku />
+            <div className="absolute top-0 left-0 size-4 border-t-2 border-l-2 border-foreground opacity-0 group-hover/titan:opacity-100 transition-all duration-200"></div>
+            <div className="absolute top-0 right-0 size-4 border-t-2 border-r-2 border-foreground opacity-0 group-hover/titan:opacity-100 transition-all duration-200"></div>
+            <div className="absolute bottom-0 left-0 size-4 border-b-2 border-l-2 border-foreground opacity-0 group-hover/titan:opacity-100 transition-all duration-200"></div>
+            <div className="absolute bottom-0 right-0 size-4 border-b-2 border-r-2 border-foreground opacity-0 group-hover/titan:opacity-100 transition-all duration-200"></div>
           </div>
           <div className="flex-1 flex flex-col">
-            <div id="nav" className="w-full flex items-center justify-end border-b border-dashed divide-x">
-              <div id="brand" className="font-mono text-sm flex-1 flex items-center h-full px-3 border-dashed">
+            <div id="nav" className="w-full flex items-center justify-between border-b border-dashed divide-x desktop-nav">
+              <div id="brand" className="font-mono text-sm flex-1 flex items-center h-full px-2 md:px-3 border-dashed">
                 <Link href="/" className="hover:underline">{siteConfig.origin.replace("https://", "")}</Link>
               </div>
-              {!isPending && (session ? (
-                <Button className="h-full border-dashed" size="lg" variant="ghost" asChild>
-                  <Link href="/dashboard" className="flex items-center gap-2 group/nav">
-                    <span>Dashboard</span>
-                    <div className="relative z-10 size-4 overflow-hidden flex items-center justify-center">
-                      <ArrowUpRight className="-z-10 absolute opacity-100 scale-100 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group-hover/nav:-translate-y-5 group-hover/nav:translate-x-5 group-hover/nav:opacity-0 group-hover/nav:scale-0 transition-all duration-200" />
-                      <ArrowUpRight className="absolute -z-10 -bottom-4 -left-4 opacity-0 scale-0 group-hover/nav:-translate-y-[15px] group-hover/nav:translate-x-4 group-hover/nav:opacity-100 group-hover/nav:scale-100 transition-all duration-200" />
-                    </div>
-                  </Link>
-                </Button>
-              ) : (
-                <Button className="h-full border-dashed" size="lg" variant="ghost" asChild>
-                  <Link href="/sign-in" className="flex items-center gap-2 group/nav">
-                    <span>Sign In</span>
-                    <div className="relative z-10 size-4 overflow-hidden flex items-center justify-center">
-                      <ArrowUpRight className="-z-10 absolute opacity-100 scale-100 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group-hover/nav:-translate-y-5 group-hover/nav:translate-x-5 group-hover/nav:opacity-0 group-hover/nav:scale-0 transition-all duration-200" />
-                      <ArrowUpRight className="absolute -z-10 -bottom-4 -left-4 opacity-0 scale-0 group-hover/nav:-translate-y-[15px] group-hover/nav:translate-x-4 group-hover/nav:opacity-100 group-hover/nav:scale-100 transition-all duration-200" />
-                    </div>
-                  </Link>
-                </Button>
-              ))}
-              <UserProfile className="border-dashed size-10 md:size-14" />
+              <div className="hidden md:flex items-center gap-2">
+                {!isPending && (session ? (
+                  <Button className="h-full border-dashed" size="lg" variant="ghost" asChild>
+                    <Link href="/dashboard" className="flex items-center gap-2 group/nav">
+                      <span>Dashboard</span>
+                      <div className="relative z-10 size-4 overflow-hidden flex items-center justify-center">
+                        <ArrowUpRight className="-z-10 absolute opacity-100 scale-100 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group-hover/nav:-translate-y-5 group-hover/nav:translate-x-5 group-hover/nav:opacity-0 group-hover/nav:scale-0 transition-all duration-200" />
+                        <ArrowUpRight className="absolute -z-10 -bottom-4 -left-4 opacity-0 scale-0 group-hover/nav:-translate-y-[15px] group-hover/nav:translate-x-4 group-hover/nav:opacity-100 group-hover/nav:scale-100 transition-all duration-200" />
+                      </div>
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button className="h-full border-dashed" size="lg" variant="ghost" asChild>
+                    <Link href="/sign-in" className="flex items-center gap-2 group/nav">
+                      <span>Sign In</span>
+                      <div className="relative z-10 size-4 overflow-hidden flex items-center justify-center">
+                        <ArrowUpRight className="-z-10 absolute opacity-100 scale-100 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group-hover/nav:-translate-y-5 group-hover/nav:translate-x-5 group-hover/nav:opacity-0 group-hover/nav:scale-0 transition-all duration-200" />
+                        <ArrowUpRight className="absolute -z-10 -bottom-4 -left-4 opacity-0 scale-0 group-hover/nav:-translate-y-[15px] group-hover/nav:translate-x-4 group-hover/nav:opacity-100 group-hover/nav:scale-100 transition-all duration-200" />
+                      </div>
+                    </Link>
+                  </Button>
+                ))}
+                <UserProfile className="border-dashed size-10 md:size-14" />
+              </div>
               <ThemeToggler className="border-dashed size-10 md:size-14" />
             </div>
-            <div id="hero" className="flex flex-col p-4">
-              <h1 className="head-text-md">Titan</h1>
-              <p className="text-muted-foreground max-w-xl mt-2 text-sm">{siteConfig.description}</p>
+            <div id="hero" className="flex flex-col p-4 md:p-6">
+              <h1 className="text-2xl md:text-3xl font-bold mb-2">Titan Blog</h1>
+              <h2 className="text-lg md:text-xl font-semibold mb-4">Building Modern Web Applications</h2>
+              <p className="text-muted-foreground max-w-xl mt-2 text-sm md:text-base leading-relaxed">{siteConfig.description}</p>
             </div>
 
 
-            <div id="code" className="flex flex-col p-4">
-              <div className="p-2 border border-dashed hover:border-primary/50 bg-card text-xs md:text-sm flex items-center justify-between transition-all duration-200 delay-75">
-                <pre className="font-mono bg-linear-to-r from-muted-foreground to-foreground bg-clip-text text-transparent">
+            <div id="code" className="flex flex-col p-4 md:p-6">
+              <div className="p-2 border border-dashed hover:border-primary/50 bg-card rounded-lg text-xs md:text-sm flex items-center justify-between transition-all duration-200 delay-75">
+                <pre className="font-mono bg-linear-to-r from-muted-foreground to-foreground bg-clip-text text-transparent whitespace-pre-wrap">
                   git clone {siteConfig.socials.github}
                 </pre>
-                <Button variant="ghost" size="icon" className="size-5 cursor-pointer group/copy" onClick={handleCopy}>
-                  {copied ? <Check className="size-4" /> : <Copy className="size-4 group-hover/copy:text-foreground" />}
+                <Button variant="ghost" size="icon" className="size-6 md:size-5 cursor-pointer group/copy" onClick={handleCopy}>
+                  {copied ? <Check className="size-5 md:size-4" /> : <Copy className="size-5 md:size-4 group-hover/copy:text-foreground" />}
                 </Button>
               </div>
             </div>
-            <div id="cta" className="flex items-center gap-4 p-4 border-b border-dashed">
+            <div id="cta" className="flex flex-col md:flex-row items-center gap-4 p-4 md:p-6 border-b border-dashed">
               <div className="flex-1">
-                <Button variant="outline" asChild className="relative border-dashed">
-                  <a href={siteConfig.socials.github} target="_blank" className="gap-2 group">
+                <Button variant="outline" asChild className="relative border-dashed w-full md:w-auto">
+                  <a href={siteConfig.socials.github} target="_blank" className="gap-3 md:gap-2 group">
                     <div className="w-full h-[1px] bg-linear-to-r from-primary/0 via-primary to-primary/0 absolute top-0 -left-1/2 translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                     <Github className="size-4" />
                     <span>GitHub</span>
@@ -101,7 +114,7 @@ export default function Home() {
               <div className="flex-6">
                 <Button
                   variant="default"
-                  className="border-dashed flex items-center justify-center gap-2 group"
+                  className="border-dashed w-full md:w-auto flex items-center justify-center gap-3 md:gap-2 group"
                   onClick={() => setIsOnboardingOpen(true)}
                 >
                   <span>Get started</span>
@@ -160,8 +173,8 @@ export default function Home() {
           ))}
         </div>
       </div>
-    </div>
-  )
+      </div>
+    )
 }
 
 const techConfig = [
@@ -252,5 +265,6 @@ export const Goku = () => {
         </clipPath>
       </defs>
     </svg>
+
   )
 }

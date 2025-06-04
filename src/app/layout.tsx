@@ -5,6 +5,7 @@ import { siteConfig } from "@/config/site.config";
 import { cn } from "@/lib/utils";
 import RootProviders from "@/components/providers";
 import { ParticlesBackground } from "@/components/particles-background";
+import { MobileNav } from "@/components/mobile-nav";
 
 const fontSans = Manrope({
   variable: "--font-sans",
@@ -78,7 +79,12 @@ export default function RootLayout({
       >
         <RootProviders>
           <ParticlesBackground />
-          {children}
+          <div className="flex flex-col">
+            <MobileNav />
+            <div className="desktop-nav">
+              {children}
+            </div>
+          </div>
         </RootProviders>
       </body>
     </html>

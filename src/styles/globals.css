@@ -1,6 +1,17 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Hide desktop navbar when mobile menu is open */
+body[data-mobile-nav-open] .desktop-nav {
+  display: none !important;
+}
+
+/* Add a subtle backdrop blur when mobile menu is open */
+body[data-mobile-nav-open] {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
