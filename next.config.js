@@ -56,11 +56,6 @@ const nextConfig = {
     styledComponents: true,
   },
 
-  // Enable React 19 features
-  future: {
-    webpackBuildWorker: true,
-  },
-
   // Disable the static directory in favor of the app directory
   useFileSystemPublicRoutes: false,
 
