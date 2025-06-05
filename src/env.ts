@@ -30,13 +30,18 @@ if (!isBuild) {
     const envValidation = createEnv({
       server: {
         // Required in all environments
-        BETTER_AUTH_URL: z.string().min(1),
-        BETTER_AUTH_SECRET: z.string().min(1),
+        BETTER_AUTH_URL: process.env.NODE_ENV === 'production'
+          ? z.string().url().min(1, "BETTER_AUTH_URL is required in production")
+          : z.string().url().default('http://localhost:3000'),
+          
+        BETTER_AUTH_SECRET: process.env.NODE_ENV === 'production'
+          ? z.string().min(1, "BETTER_AUTH_SECRET is required in production")
+          : z.string().default('dev-secret'),
         
         // Database - required in production, optional in development
-        DATABASE_URL: process.env.NODE_ENV === 'production' 
+        DATABASE_URL: process.env.NODE_ENV === 'production'
           ? z.string().url().min(1, "DATABASE_URL is required in production")
-          : z.string().url().optional().default(''),
+          : z.string().url().default('postgresql://user:pass@localhost:5432/titan'),
         
         // OAuth providers - all optional with empty defaults
         GITHUB_CLIENT_ID: z.string().default(''),
