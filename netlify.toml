@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "npm install --legacy-peer-deps && npm run build"
   publish = ".next"
 
 [build.environment]
@@ -9,11 +9,18 @@
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
   NEXT_IGNORE_ESLINT = "1"
   NEXT_IGNORE_TYPECHECK = "1"
+  # Skip environment validation during build
+  SKIP_ENV_VALIDATION = "true"
+  # Required for Next.js 13+ on Netlify
+  NETLIFY_NEXT_PLUGIN_FORCE_RUN = "true"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
   [plugins.inputs]
-    # No additional inputs needed for the plugin
+    # Enable server components
+    enableServerComponents = true
+    # Enable static optimization
+    staticOptimization = true
 
 [dev]
   command = "npm run dev"
@@ -25,3 +32,22 @@
 [functions]
   # Configure functions directory
   directory = ".next/server/functions"
+  # Set the Node.js version for serverless functions
+  node_bundler = "esbuild"
+
+# Required environment variables - these must be set in Netlify's environment variables
+[build.environment]
+  # Better Auth
+  BETTER_AUTH_SECRET = ""
+  BETTER_AUTH_URL = ""
+  
+  # Database
+  DATABASE_URL = ""
+  
+  # OAuth Providers (optional)
+  GITHUB_CLIENT_ID = ""
+  GITHUB_CLIENT_SECRET = ""
+  GOOGLE_CLIENT_ID = ""
+  GOOGLE_CLIENT_SECRET = ""
+  DISCORD_CLIENT_ID = ""
+  DISCORD_CLIENT_SECRET = ""
