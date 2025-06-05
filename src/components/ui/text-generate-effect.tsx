@@ -17,8 +17,8 @@ export const TextGenerateEffect = ({
   delay?: number;
 }) => {
   const [scope, animate] = useAnimate();
-  let wordsArray = words.split(" ");
-  
+  const wordsArray = words.split(" ");
+
   useEffect(() => {
     const timer = setTimeout(() => {
       animate(
@@ -35,7 +35,7 @@ export const TextGenerateEffect = ({
     }, delay * 1000);
 
     return () => clearTimeout(timer);
-  }, [scope.current, delay]);
+  }, [delay, wordsArray, duration, filter, animate]);
 
   const renderWords = () => {
     return (

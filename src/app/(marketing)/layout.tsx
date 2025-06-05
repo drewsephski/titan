@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { UserMenu } from "@/components/user-menu";
 
 export default function MarketingLayout({
   children,
@@ -27,7 +26,6 @@ export default function MarketingLayout({
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <UserMenu />
           </div>
         </nav>
       </header>

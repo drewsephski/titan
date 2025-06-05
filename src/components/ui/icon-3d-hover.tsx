@@ -4,6 +4,11 @@ import React, { useState, useRef } from 'react';
 import { motion, MotionConfigContext, LayoutGroup } from 'framer-motion';
 
 // Types
+interface TransitionProps {
+  value: typeof transition1;
+  children: React.ReactNode;
+}
+
 interface Props {
   heading?: string;
   text?: string;
@@ -24,20 +29,14 @@ const transition1 = {
   damping: 15
 };
 
-const transition2 = {
-  delay: 0,
-  duration: 0.5,
-  ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-  type: "tween" as const
-};
-
-const transformTemplate1 = (_: any, t: string) => `translate(-50%, -50%) ${t}`;
-
 // Transition wrapper component
-const Transition: React.FC<{ value: any; children: React.ReactNode }> = ({ value, children }) => {
+const Transition: React.FC<TransitionProps> = ({ value, children }) => {
   const config = React.useContext(MotionConfigContext);
   const transition = value ?? config.transition;
-  const contextValue = React.useMemo(() => ({ ...config, transition }), [JSON.stringify(transition)]);
+  const contextValue = React.useMemo(
+    () => ({ ...config, transition }),
+    [config, transition]
+  );
 
   return (
     <MotionConfigContext.Provider value={contextValue}>
@@ -59,7 +58,7 @@ export const IconHover3D: React.FC<Props> = ({
   ...restProps
 }) => {
   const [currentVariant, setCurrentVariant] = useState<'Default' | 'Hover'>(variant);
-  const [gestureState, setGestureState] = useState({ isHovered: false });
+  // Removed unused gesture state
   const refBinding = useRef<HTMLDivElement>(null);
   const defaultLayoutId = React.useId();
 
@@ -67,39 +66,11 @@ export const IconHover3D: React.FC<Props> = ({
   const variants = [currentVariant === 'Default' ? 'GPnJri30y' : 'zEwHlJ7zp'];
 
   const handleMouseEnter = async () => {
-    setGestureState({ isHovered: true });
     setCurrentVariant('Hover');
   };
 
   const handleMouseLeave = async () => {
-    setGestureState({ isHovered: false });
     setCurrentVariant('Default');
-  };
-
-  const cubeSliceVariants = {
-    zEwHlJ7zp: {
-      "--border-color": "rgb(139, 47, 250)"
-    }
-  };
-
-  const titleTransition = {
-    duration: 0.3,
-    ease: [0.25, 0.46, 0.45, 0.94],
-    type: "tween" as const
-  };
-
-  const sliceCubeVariants = {
-    zEwHlJ7zp: {
-      rotateX: -28,
-      rotateY: -43,
-      scale: 1.1
-    }
-  };
-
-  const cornerScaleVariants = {
-    zEwHlJ7zp: {
-      scale: 2.2
-    }
   };
 
   return (
@@ -146,7 +117,7 @@ export const IconHover3D: React.FC<Props> = ({
                 }}
               >
                 <div className="relative w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
-                  <motion.div 
+                  <motion.div
                     className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 backdrop-blur-sm"
                     animate={{
                       opacity: isHoverVariant ? 1 : 0.5,
@@ -157,7 +128,7 @@ export const IconHover3D: React.FC<Props> = ({
                       ease: 'easeInOut'
                     }}
                   />
-                  <motion.div 
+                  <motion.div
                     className="relative z-10 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center"
                     animate={{
                       y: isHoverVariant ? -5 : 0,
@@ -207,7 +178,7 @@ export const IconHover3D: React.FC<Props> = ({
                     position: "relative"
                   }}
                 >
-                  <motion.span 
+                  <motion.span
                     style={{
                       position: "relative",
                       zIndex: 1,

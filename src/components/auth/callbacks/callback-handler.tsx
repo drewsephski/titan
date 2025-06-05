@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-import { useUser } from '@/hooks/use-user';
+import { useAuth } from '@/context/auth-context';
 import { toast } from 'sonner';
 
 /**
@@ -12,9 +12,10 @@ import { toast } from 'sonner';
  */
 export function AuthCallbackHandler() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState<string>('');
-  const { signInWithProvider } = useUser();
+  const { signIn } = useAuth();
 
   useEffect(() => {
     const handleCallback = async () => {
@@ -31,12 +32,13 @@ export function AuthCallbackHandler() {
 
         // Handle OAuth callback
         if (provider) {
-          const result = await signInWithProvider(provider);
-          if (result.success) {
-            window.location.href = callbackUrl;
+          try {
+            await signIn(provider);
+            // Use router.push instead of window.location.href for client-side navigation
+            router.push(callbackUrl);
             return;
-          } else {
-            throw new Error(result.error || 'Failed to sign in with provider');
+          } catch (error) {
+            throw new Error(error instanceof Error ? error.message : 'Failed to sign in with provider');
           }
         }
 
@@ -70,7 +72,7 @@ export function AuthCallbackHandler() {
     };
 
     handleCallback();
-  }, [searchParams, signInWithProvider]);
+  }, [searchParams, signIn]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">

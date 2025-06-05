@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/icons';
 import { siteConfig } from '@/config/site.config';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Pricing - ' + siteConfig.name,

@@ -205,7 +205,7 @@ function Particles({
     let lastTime = performance.now();
     let elapsed = 0;
 
-    const update = (t: number) => {
+    const update = () => {
       animationFrameId = requestAnimationFrame(update);
 
       const currentTime = performance.now();
@@ -273,7 +273,7 @@ function Particles({
     particleCount,
     particleSpread,
     speed,
-    JSON.stringify(particleColors),
+    particleColors,
     moveParticlesOnHover,
     particleHoverFactor,
     alphaParticles,

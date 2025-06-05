@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { UserMenu } from '@/components/user-menu';
 
 export function MainNav() {
   const pathname = usePathname();
@@ -46,7 +45,6 @@ export function MainNav() {
           </div>
         </div>
         <div className="flex items-center space-x-4">
-          <UserMenu />
         </div>
       </nav>
     </header>

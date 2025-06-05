@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { usePathname } from 'next/navigation';
 import { Icons } from '@/components/icons';
 import { siteConfig } from '@/config/site.config';
 import { BookOpen, Zap, Download, Key, Database, Code, Cloud, Settings, HelpCircle, Github, Newspaper, Phone, ArrowRight } from 'lucide-react';
@@ -129,7 +128,6 @@ interface SectionRef {
 }
 
 export default function DocsPage() {
-  const pathname = usePathname();
   const [activeSection, setActiveSection] = useState('');
   const sectionsRef = useRef<SectionRef[]>([]);
 
@@ -242,7 +240,7 @@ export default function DocsPage() {
             <div className="prose dark:prose-invert max-w-none">
               <h1 id="documentation" className="scroll-mt-24 text-3xl font-bold mb-6">Documentation</h1>
               <p className="text-muted-foreground mb-4 text-lg">
-                Welcome to the {siteConfig.name} documentation. Here you'll find comprehensive
+                Welcome to the {siteConfig.name} documentation. Here you&apos;ll find comprehensive
                 guides and documentation to help you get started and make the most of our platform.
               </p>
 
@@ -373,7 +371,7 @@ export default function DocsPage() {
               <section id="need-help" className="mt-16 border-t pt-8 scroll-mt-24">
                 <h2 className="text-2xl font-bold mb-4">Need help?</h2>
                 <p className="mb-4">
-                  Can't find what you're looking for? Check out our{' '}
+                  Can&apos;t find what you&apos;re looking for? Check out our{' '}
                   <Dialog>
                     <DialogTrigger asChild>
                       <div

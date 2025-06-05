@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight, ExternalLink } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect"
 import { ArticleDialog } from "@/components/ui/article-dialog"

@@ -1,7 +1,7 @@
 'use client';
 
 import { MainNav } from '@/components/main-nav';
-import { Goku } from "@/app/(marketing)/page";
+import Goku from "@/components/ui/goku";
 
 export default function AuthLayout({
   children,

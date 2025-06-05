@@ -2,7 +2,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -10,8 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { Icons } from "@/components/icons";
-import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { useAuth } from "@/context/auth-context";
 
 interface SignUpPageProps {
   className?: string;
@@ -19,7 +18,6 @@ interface SignUpPageProps {
 }
 
 export const SignUpPage = ({ className, onSignUpSuccess }: SignUpPageProps) => {
-  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -28,6 +26,7 @@ export const SignUpPage = ({ className, onSignUpSuccess }: SignUpPageProps) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const { signUp } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -54,21 +53,15 @@ export const SignUpPage = ({ className, onSignUpSuccess }: SignUpPageProps) => {
     setIsLoading(true);
 
     try {
-      const { error } = await authClient.signUp.email({
+      // Use the signUp function from our auth context
+      await signUp({
         email: formData.email,
         password: formData.password,
-        name: formData.name,
-        callbackURL: "/dashboard"
+        name: formData.name
       });
 
-      if (error) {
-        setError(error.message || "Failed to create account. Please try again.");
-        return;
-      }
+      toast.success("Account created successfully!");
 
-
-      toast.success("Account created successfully! Please check your email to verify your account.");
-      
       if (onSignUpSuccess) {
         onSignUpSuccess();
       }
@@ -83,16 +76,7 @@ export const SignUpPage = ({ className, onSignUpSuccess }: SignUpPageProps) => {
   const handleSocialSignIn = async (provider: "github" | "google" | "discord") => {
     try {
       setIsLoading(true);
-      
-      // Use the social sign-in method from authClient
-      const { error } = await authClient.signIn.social({
-        provider,
-        callbackURL: "/dashboard"
-      });
-      
-      if (error) {
-        setError(error.message || `Failed to sign in with ${provider}`);
-      }
+      setError(`Social login with ${provider} is not yet implemented.`);
     } catch (err) {
       console.error(`Social sign in error (${provider}):`, err);
       setError(`Failed to sign in with ${provider}. Please try again.`);
@@ -199,9 +183,9 @@ export const SignUpPage = ({ className, onSignUpSuccess }: SignUpPageProps) => {
         </div>
 
         <div className="grid grid-cols-3 gap-3">
-          <Button 
-            variant="outline" 
-            type="button" 
+          <Button
+            variant="outline"
+            type="button"
             disabled={isLoading}
             onClick={() => handleSocialSignIn("github")}
             className="flex items-center justify-center"
@@ -209,9 +193,9 @@ export const SignUpPage = ({ className, onSignUpSuccess }: SignUpPageProps) => {
             <Icons.gitHub className="h-4 w-4" />
             <span className="sr-only">GitHub</span>
           </Button>
-          <Button 
-            variant="outline" 
-            type="button" 
+          <Button
+            variant="outline"
+            type="button"
             disabled={isLoading}
             onClick={() => handleSocialSignIn("google")}
             className="flex items-center justify-center"
@@ -219,9 +203,9 @@ export const SignUpPage = ({ className, onSignUpSuccess }: SignUpPageProps) => {
             <Icons.Google className="h-4 w-4" />
             <span className="sr-only">Google</span>
           </Button>
-          <Button 
-            variant="outline" 
-            type="button" 
+          <Button
+            variant="outline"
+            type="button"
             disabled={isLoading}
             onClick={() => handleSocialSignIn("discord")}
             className="flex items-center justify-center"

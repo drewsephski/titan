@@ -10,7 +10,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -19,10 +18,9 @@ interface OnboardingDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onComplete: () => void;
-  children?: React.ReactNode;
 }
 
-function OnboardingDialog({ open, onOpenChange, onComplete, children }: OnboardingDialogProps) {
+function OnboardingDialog({ open, onOpenChange, onComplete }: OnboardingDialogProps) {
   const [step, setStep] = useState(1);
   const totalSteps = 3;
 

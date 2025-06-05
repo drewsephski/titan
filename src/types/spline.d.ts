@@ -1,19 +1,20 @@
 declare module '@splinetool/react-spline' {
   import { ComponentType } from 'react';
-  
+  import { MouseEvent, KeyboardEvent, WheelEvent } from 'react';
+
   interface SplineProps {
     scene: string;
     className?: string;
     onLoad?: () => void;
-    onMouseDown?: (e: any) => void;
-    onMouseUp?: (e: any) => void;
-    onMouseHover?: (e: any) => void;
-    onKeyDown?: (e: any) => void;
-    onKeyUp?: (e: any) => void;
-    onStart?: (e: any) => void;
-    onLookAt?: (e: any) => void;
-    onFollow?: (e: any) => void;
-    onWheel?: (e: any) => void;
+    onMouseDown?: (e: MouseEvent) => void;
+    onMouseUp?: (e: MouseEvent) => void;
+    onMouseHover?: (e: MouseEvent) => void;
+    onKeyDown?: (e: KeyboardEvent) => void;
+    onKeyUp?: (e: KeyboardEvent) => void;
+    onStart?: (e: MouseEvent) => void;
+    onLookAt?: (e: MouseEvent) => void;
+    onFollow?: (e: MouseEvent) => void;
+    onWheel?: (e: WheelEvent) => void;
     renderOnDemand?: boolean;
   }
 

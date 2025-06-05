@@ -1,7 +1,7 @@
 // src/app/(auth)/sign-up/page.tsx
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SignUpPage } from "@/components/ui/sign-up";
 import { OnboardingDialog } from "@/components/onboarding/onboarding-dialog";

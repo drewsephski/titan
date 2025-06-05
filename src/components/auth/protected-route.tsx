@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { useUser } from '@/hooks/use-user';
+import { useAuth } from '@/context/auth-context';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -15,7 +15,7 @@ export function ProtectedRoute({
   requiredRole,
   loadingComponent,
 }: ProtectedRouteProps) {
-  const { user, loading, status } = useUser();
+  const { session, status } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -25,10 +25,10 @@ export function ProtectedRoute({
     if (typeof window === 'undefined') return;
 
     // If we're still loading, do nothing
-    if (loading || status === 'loading') return;
+    if (status === 'loading') return;
 
-    // If there's no user, redirect to sign-in
-    if (!user) {
+    // If there's no session, redirect to sign-in
+    if (!session) {
       const callbackUrl = encodeURIComponent(
         `${pathname}${searchParams?.toString() ? `?${searchParams.toString()}` : ''}`
       );
@@ -37,14 +37,14 @@ export function ProtectedRoute({
     }
 
     // If a role is required but the user doesn't have it, redirect to unauthorized
-    if (requiredRole && user.role !== requiredRole) {
+    if (requiredRole && session?.user?.role !== requiredRole) {
       router.push('/unauthorized');
       return;
     }
-  }, [user, loading, status, requiredRole, router, pathname, searchParams]);
+  }, [session, status, requiredRole, router, pathname, searchParams]);
 
   // Show loading state while checking auth
-  if (loading || status === 'loading') {
+  if (status === 'loading') {
     return loadingComponent || (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
@@ -52,12 +52,12 @@ export function ProtectedRoute({
     );
   }
 
-  // If there's a user and they have the required role (if any), render children
-  if (user && (!requiredRole || user.role === requiredRole)) {
+  // If the user is authenticated and has the required role (if any), render the children
+  if (session && (!requiredRole || session.user.role === requiredRole)) {
     return <>{children}</>;
   }
 
-  // If we get here, we're still loading or redirecting
+  // If we get here, something went wrong with the auth flow
   return null;
 }
 
@@ -68,7 +68,7 @@ export function withAuth<T extends object>(
 ) {
   return function WithAuth(props: T) {
     return (
-      <ProtectedRoute 
+      <ProtectedRoute
         requiredRole={options.requiredRole}
         loadingComponent={options.loadingComponent}
       >

@@ -1,7 +1,6 @@
 "use client";
 
-import { BlogPost } from "@/types/blog";
-import { blogPosts } from "@/data/blog-posts";
+import {  blogPosts } from "@/data/blog-posts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

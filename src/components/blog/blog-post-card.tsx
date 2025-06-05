@@ -1,14 +1,11 @@
 import Image from 'next/image';
-import Link from 'next/link';
-import { ArrowRight, Clock3, User, X, Calendar } from 'lucide-react';
+import { ArrowRight, Clock3, User, Calendar, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { BlogPost } from '@/types/blog';
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';

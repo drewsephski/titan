@@ -83,7 +83,6 @@ export function ScrollReveal({
   children,
   direction = 'up',
   distance = 50,
-  delay = 0,
   ...props
 }: ScrollRevealProps) {
   const directionMap = {

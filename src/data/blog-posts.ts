@@ -17,7 +17,8 @@ export const blogPosts: BlogPost[] = [
     category: 'AI',
     tags: ['AI', 'Trends', 'Web Development'],
     featured: true,
-    slug: 'future-web-development-ai'
+    slug: 'future-web-development-ai',
+    image: '/images/blog/ai-web-dev.jpg'
   },
   {
     id: 2,
@@ -55,7 +56,8 @@ function Counter() {
     category: 'React',
     tags: ['React', 'Hooks', 'Best Practices'],
     featured: true,
-    slug: 'mastering-react-hooks-guide'
+    slug: 'mastering-react-hooks-guide',
+    image: '/images/blog/react-hooks.jpg'
   },
   {
     id: 3,
@@ -78,7 +80,8 @@ function Counter() {
     category: 'Accessibility',
     tags: ['Accessibility', 'Best Practices', 'Inclusion'],
     featured: false,
-    slug: 'building-accessible-web-applications'
+    slug: 'building-accessible-web-applications',
+    image: '/images/blog/web-accessibility.jpg'
   },
   {
     id: 4,
@@ -101,7 +104,8 @@ function Counter() {
     category: 'Best Practices',
     tags: ['Code Review', 'Teamwork', 'Quality'],
     featured: true,
-    slug: 'the-art-of-code-review'
+    slug: 'the-art-of-code-review',
+    image: '/images/blog/code-review.jpg'
   },
   {
     id: 5,
@@ -124,7 +128,8 @@ function Counter() {
     category: 'Backend',
     tags: ['Node.js', 'API', 'Scalability'],
     featured: false,
-    slug: 'building-scalable-apis-nodejs'
+    slug: 'building-scalable-apis-nodejs',
+    image: '/images/blog/node-api.jpg'
   },
   {
     id: 6,
@@ -143,6 +148,7 @@ function Counter() {
     tags: ['AI', 'Trends', 'Web Development'],
     featured: true,
     slug: 'future-web-development-ai',
+    image: '/images/blog/ai-web-dev.jpg'
   },
   {
     id: 7,
@@ -194,6 +200,7 @@ function Example() {
     tags: ['React', 'Best Practices', 'Components'],
     featured: true,
     slug: 'mastering-react-hooks',
+    image: '/images/blog/react-hooks-advanced.jpg',
   },
   {
     id: 8,
@@ -225,6 +232,7 @@ function Example() {
     tags: ['CSS', 'Layout', 'Responsive Design'],
     featured: true,
     slug: 'css-grid-vs-flexbox',
+    image: '/images/blog/css-grid-flexbox.jpg',
   },
   {
     id: 9,
@@ -248,6 +256,7 @@ document.body.textContent = greet(user);</code></pre>
     tags: ['TypeScript', 'Type Safety', 'Web Development'],
     featured: false,
     slug: 'typescript-for-beginners',
+    image: '/images/blog/typescript-intro.jpg',
   },
   {
     id: 10,
@@ -272,6 +281,7 @@ document.body.textContent = greet(user);</code></pre>
     tags: ['Accessibility', 'Inclusion', 'Best Practices'],
     featured: false,
     slug: 'building-accessible-web-interfaces',
+    image: '/images/blog/web-accessibility.jpg',
   },
   {
     id: 11,
@@ -301,6 +311,7 @@ document.body.textContent = greet(user);</code></pre>
     tags: ['Performance', 'Web Development', 'Best Practices'],
     featured: false,
     slug: 'optimizing-web-performance',
+    image: '/images/blog/web-performance.jpg',
   },
   {
     id: 12,
@@ -342,6 +353,7 @@ function App() {
     tags: ['React', 'State Management', 'Best Practices'],
     featured: false,
     slug: 'state-management-react',
+    image: '/images/blog/react-state.jpg',
   },
   {
     id: 13,
@@ -365,6 +377,7 @@ function App() {
     tags: ['Edge Computing', 'Trends', 'Web Development'],
     featured: false,
     slug: 'intro-edge-computing',
+    image: '/images/blog/edge-computing.jpg',
   },
   {
     id: 14,
@@ -389,10 +402,11 @@ function App() {
     author: 'Drew Sepeczi',
     readTime: '9 min read',
     date: '2023-09-12',
+    image: '/images/blog/tailwind-css.jpg',
     category: 'CSS',
-    tags: ['CSS', 'Responsive Design', 'Layout'],
-    featured: false,
-    slug: 'responsive-design-tailwind-css',
+    tags: ['Tailwind CSS', 'Responsive Design', 'CSS Frameworks'],
+    featured: true,
+    slug: 'responsive-design-tailwind',
   },
   {
     id: 15,
@@ -418,6 +432,7 @@ let output = identity<string>("myString"); // type of output is string</code></p
     author: 'Drew Sepeczi',
     readTime: '16 min read',
     date: '2023-09-07',
+    image: '/images/blog/typescript-patterns.jpg',
     category: 'TypeScript',
     tags: ['TypeScript', 'Type Safety', 'Best Practices'],
     featured: false,

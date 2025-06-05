@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, lazy, ReactNode } from 'react';
+import { Suspense, ReactNode } from 'react';
 import { cn } from "@/lib/utils";
 import Spline from "@splinetool/react-spline";
 

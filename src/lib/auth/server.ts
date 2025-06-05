@@ -1,5 +1,4 @@
 import { auth } from '../auth';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 // Define redirection paths as constants for easier management and consistency.
@@ -29,7 +28,7 @@ interface RawSession {
   };
 }
 
-interface Session extends RawSession {
+export interface Session extends RawSession {
   user: User;
 }
 
@@ -51,7 +50,7 @@ export async function getServerSession(): Promise<Session | null> {
 
     // Ensure the user data is properly typed
     const rawSession = result.session as RawSession;
-    
+
     if (!rawSession.user) {
       console.warn('Session missing user data:', rawSession);
       return null;

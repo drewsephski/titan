@@ -4,7 +4,7 @@ import { motion, Variants } from 'framer-motion';
 
 interface SidebarCardProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
-  icon?: React.ElementType;
+  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   children: React.ReactNode;
 }
 
