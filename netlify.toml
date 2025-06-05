@@ -13,14 +13,20 @@
   NEXT_IGNORE_ESLINT = "1"
   NEXT_IGNORE_TYPECHECK = "1"
   
-  # Environment validation
+  # Environment validation - skip in build
   SKIP_ENV_VALIDATION = "true"
   NETLIFY_NEXT_PLUGIN_FORCE_RUN = "true"
   
-  # Application environment variables (set these in Netlify UI)
-  BETTER_AUTH_SECRET = ""
-  BETTER_AUTH_URL = ""
+  # Required environment variables (set these in Netlify UI)
+  # Database - get this from your Neon dashboard
+  # Format: postgres://user:password@host/dbname?options
   DATABASE_URL = ""
+  
+  # Better Auth - required
+  BETTER_AUTH_URL = ""
+  BETTER_AUTH_SECRET = ""
+  
+  # OAuth Providers (optional)
   GITHUB_CLIENT_ID = ""
   GITHUB_CLIENT_SECRET = ""
   GOOGLE_CLIENT_ID = ""

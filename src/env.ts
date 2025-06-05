@@ -29,9 +29,16 @@ if (!isBuild) {
     // Create the actual environment validation
     const envValidation = createEnv({
       server: {
+        // Required in all environments
         BETTER_AUTH_URL: z.string().min(1),
         BETTER_AUTH_SECRET: z.string().min(1),
-        DATABASE_URL: z.string().url(),
+        
+        // Database - required in production, optional in development
+        DATABASE_URL: process.env.NODE_ENV === 'production' 
+          ? z.string().url().min(1, "DATABASE_URL is required in production")
+          : z.string().url().optional().default(''),
+        
+        // OAuth providers - all optional with empty defaults
         GITHUB_CLIENT_ID: z.string().default(''),
         GITHUB_CLIENT_SECRET: z.string().default(''),
         GOOGLE_CLIENT_ID: z.string().default(''),
