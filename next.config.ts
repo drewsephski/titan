@@ -1,9 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    nodeMiddleware: true,
-  },
+  // Enable React strict mode
+  reactStrictMode: true,
+  
+  // Image optimization configuration
   images: {
     remotePatterns: [
       {
@@ -14,6 +15,17 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  
+  // Enable SWC minification for better performance
+  swcMinify: true,
+  
+  // Enable webpack 5
+  future: {
+    webpack5: true,
+  },
+  
+  // Enable static exports if needed
+  // output: 'export',
 };
 
 export default nextConfig;
