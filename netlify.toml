@@ -37,17 +37,14 @@
   DISCORD_CLIENT_ID = ""
   DISCORD_CLIENT_SECRET = ""
 
+# Next.js plugin
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
+# Development server configuration
 [dev]
   framework = "next"
   command = "npm run dev"
   targetPort = 3000
   publish = ".next"
   port = 3000
-  framework = "next"
-
-[functions]
-  directory = ".next/server/functions"
-  node_bundler = "esbuild"
