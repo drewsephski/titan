@@ -3,15 +3,22 @@ import { z } from "zod";
 
 // Check if we're in a build environment
 const isBuild = process.env['NODE_ENV'] === 'production' || process.env['NETLIFY'] === 'true';
+const isProd = process.env['NODE_ENV'] === 'production';
 
 // Create a type-safe environment object
 type EnvSchema = {
+  // App
+  NODE_ENV: 'development' | 'production' | 'test';
+  NEXT_PUBLIC_SITE_URL: string;
+  
   // BetterAuth
   BETTER_AUTH_URL: string;
   BETTER_AUTH_SECRET: string;
+  
   // Database
   DATABASE_URL: string;
-  // OAuth Providers
+  
+  // OAuth Providers (optional)
   GITHUB_CLIENT_ID: string;
   GITHUB_CLIENT_SECRET: string;
   GOOGLE_CLIENT_ID: string;
@@ -21,7 +28,10 @@ type EnvSchema = {
 };
 
 // Create a safe environment object that won't throw during build
-const safeEnv: Partial<EnvSchema> = {};
+const safeEnv: Partial<EnvSchema> = {
+  NODE_ENV: (process.env['NODE_ENV'] as 'development' | 'production' | 'test') || 'development',
+  NEXT_PUBLIC_SITE_URL: process.env['NEXT_PUBLIC_SITE_URL'] || 'http://localhost:3000',
+};
 
 // Only validate environment variables if not in build mode
 if (!isBuild) {
@@ -29,26 +39,29 @@ if (!isBuild) {
     // Create the actual environment validation
     const envValidation = createEnv({
       server: {
+        // App
+        NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+        
         // Required in all environments
-        BETTER_AUTH_URL: process.env.NODE_ENV === 'production'
+        BETTER_AUTH_URL: isProd
           ? z.string().url().min(1, "BETTER_AUTH_URL is required in production")
           : z.string().url().default('http://localhost:3000'),
           
-        BETTER_AUTH_SECRET: process.env.NODE_ENV === 'production'
+        BETTER_AUTH_SECRET: isProd
           ? z.string().min(1, "BETTER_AUTH_SECRET is required in production")
           : z.string().default('dev-secret'),
         
         // Database - required in production, optional in development
-        DATABASE_URL: process.env.NODE_ENV === 'production'
+        DATABASE_URL: isProd
           ? z.string().url().min(1, "DATABASE_URL is required in production")
           : z.string().url().default('postgresql://user:pass@localhost:5432/titan'),
         
         // OAuth providers - all optional with empty defaults
-        GITHUB_CLIENT_ID: z.string().default(''),
-        GITHUB_CLIENT_SECRET: z.string().default(''),
-        GOOGLE_CLIENT_ID: z.string().default(''),
-        GOOGLE_CLIENT_SECRET: z.string().default(''),
-        DISCORD_CLIENT_ID: z.string().default(''),
+        GITHUB_CLIENT_ID: z.string().default('').optional(),
+        GITHUB_CLIENT_SECRET: z.string().default('').optional(),
+        GOOGLE_CLIENT_ID: z.string().default('').optional(),
+        GOOGLE_CLIENT_SECRET: z.string().default('').optional(),
+        DISCORD_CLIENT_ID: z.string().default('').optional(),
         DISCORD_CLIENT_SECRET: z.string().default(''),
       },
       client: {},

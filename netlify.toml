@@ -1,10 +1,14 @@
 [build]
   command = "npm install --legacy-peer-deps && npm run build"
   publish = ".next"
+  functions = ".next/server/functions"
 
 [build.environment]
+  # Node.js version
   NODE_VERSION = "20"
   NPM_FLAGS = "--legacy-peer-deps"
+  
+  # Build optimizations
   NEXT_TELEMETRY_DISABLED = "1"
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
   NEXT_IGNORE_ESLINT = "1"
@@ -12,20 +16,32 @@
   SKIP_ENV_VALIDATION = "true"
   NETLIFY_NEXT_PLUGIN_FORCE_RUN = "true"
   
+  # Environment
+  NODE_ENV = "production"
+  
+  # Site Configuration
+  NEXT_PUBLIC_SITE_URL = "https://${URL}"
+  
   # Database
   DATABASE_URL = "postgresql://titan_owner:npg_XiZegLY9bWz7@ep-curly-thunder-a8r4hkmh-pooler.eastus2.azure.neon.tech/titan?sslmode=require"
   
-  # Auth
+  # Authentication
   BETTER_AUTH_URL = "https://${URL}/api/auth"
   BETTER_AUTH_SECRET = "Vizo94MsrmVjWUyHB03bhooIkriDrOu6"
   
-  # Site URL
-  NEXT_PUBLIC_SITE_URL = "https://${URL}"
+  # OAuth Providers (optional)
+  GITHUB_CLIENT_ID = ""
+  GITHUB_CLIENT_SECRET = ""
+  GOOGLE_CLIENT_ID = ""
+  GOOGLE_CLIENT_SECRET = ""
+  DISCORD_CLIENT_ID = ""
+  DISCORD_CLIENT_SECRET = ""
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
 [dev]
+  framework = "next"
   command = "npm run dev"
   targetPort = 3000
   publish = ".next"
