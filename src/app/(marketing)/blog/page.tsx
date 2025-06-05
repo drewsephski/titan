@@ -1,14 +1,126 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
-import { BookOpen, Zap, Download, Key, Database, Code, Cloud, Settings, HelpCircle, Github, Newspaper, Phone, ArrowRight } from 'lucide-react';
-import { Clock, User, Calendar } from 'lucide-react';
+import { BookOpen, ArrowRight, Clock, User, Calendar, ArrowUp } from 'lucide-react';
 import { Showcase3D } from '@/components/3d-showcase';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { blogPosts } from '@/data/blog-posts';
 import { BlogPost } from '@/types/blog';
 import { toast } from 'sonner';
+
+// Animation variants
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.3,
+    },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } },
+};
+
+// Scroll to top component
+const ScrollToTop = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const toggleVisibility = () => {
+    if (window.pageYOffset > 300) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', toggleVisibility);
+    return () => window.removeEventListener('scroll', toggleVisibility);
+  }, []);
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 p-3 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 transition-all duration-300"
+          aria-label="Scroll to top"
+        >
+          <ArrowUp className="h-5 w-5" />
+        </motion.button>
+      )}
+    </AnimatePresence>
+  );
+};
+
+// Blog Post Card Component
+const BlogPostCard = ({ post, onClick }: { post: BlogPost; onClick: () => void }) => (
+  <motion.article
+    variants={item}
+    className="group relative overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-all hover:shadow-md hover:-translate-y-1"
+    onClick={onClick}
+    whileHover={{ scale: 1.02 }}
+    whileTap={{ scale: 0.98 }}
+  >
+    <div className="relative h-48 overflow-hidden">
+      <div
+        className="h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+        style={{ backgroundImage: `url(${post.image || '/images/placeholder-blog.jpg'})` }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+      <div className="absolute bottom-4 left-4 right-4">
+        <div className="flex flex-wrap gap-2 mb-2">
+          {post.tags?.map((tag) => (
+            <span
+              key={tag}
+              className="px-2 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+        <h3 className="text-xl font-bold text-white line-clamp-2">{post.title}</h3>
+      </div>
+    </div>
+    <div className="p-6">
+      <div className="flex items-center text-sm text-muted-foreground mb-4">
+        <div className="flex items-center mr-4">
+          <User className="h-4 w-4 mr-1" />
+          {post.author || 'Titan Team'}
+        </div>
+        <div className="flex items-center">
+          <Calendar className="h-4 w-4 mr-1" />
+          {post.date}
+        </div>
+        <div className="ml-auto flex items-center">
+          <Clock className="h-4 w-4 mr-1" />
+          {post.readTime}
+        </div>
+      </div>
+      <p className="text-muted-foreground line-clamp-3 mb-4">{post.excerpt}</p>
+      <div className="flex items-center text-primary font-medium group-hover:underline">
+        Read more
+        <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+      </div>
+    </div>
+  </motion.article>
+);
 
 export default function BlogPage() {
   const [openDialog, setOpenDialog] = useState(false);
@@ -130,40 +242,40 @@ export default function BlogPage() {
 
       {/* Post Dialog */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogContent className="sm:max-w-[800px] bg-card border border-border shadow-lg rounded-2xl p-8 transition-all duration-300 hover:shadow-xl hover:border-primary/10 hover:bg-muted/5">
-          {selectedPost && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
-                  <TextGenerateEffect words={selectedPost.title} duration={0.8} />
-                </DialogTitle>
-                <DialogDescription className="flex items-center text-sm text-muted-foreground gap-4">
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-1.5" /> {selectedPost.readTime}
-                  </div>
-                  <div className="flex items-center">
-                    <Calendar className="h-4 w-4 mr-1.5" /> {selectedPost.date}
-                  </div>
-                  <div className="flex items-center">
-                    <User className="h-4 w-4 mr-1.5" /> {selectedPost.author}
-                  </div>
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-8">
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center transition-all duration-300 hover:scale-105">
-                    <User className="h-6 w-6 text-muted-foreground transition-colors duration-300 hover:text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-muted-foreground transition-colors duration-300 hover:text-primary">{selectedPost.author}</h4>
-                    <p className="text-sm text-muted-foreground/80 transition-colors duration-300 hover:text-primary/70">{selectedPost.category}</p>
-                  </div>
-                </div>
-                <div className="prose prose-lg max-w-none text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: selectedPost.content }} />
-              </div>
-            </>
-          )}
-        </DialogContent>
+       <DialogContent className="sm:max-w-[900px] bg-card border border-border shadow-lg rounded-2xl p-8 transition-all duration-300 hover:bg-muted/90">
+         {selectedPost && (
+           <>
+             <DialogHeader>
+               <DialogTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+                 <TextGenerateEffect words={selectedPost.title} duration={0.8} />
+               </DialogTitle>
+               <DialogDescription className="flex items-center text-sm text-muted-foreground gap-4">
+                 <div className="flex items-center">
+                   <Clock className="h-4 w-4 mr-1.5" /> {selectedPost.readTime}
+                 </div>
+                 <div className="flex items-center">
+                   <Calendar className="h-4 w-4 mr-1.5" /> {selectedPost.date}
+                 </div>
+                 <div className="flex items-center">
+                   <User className="h-4 w-4 mr-1.5" /> {selectedPost.author}
+                 </div>
+               </DialogDescription>
+             </DialogHeader>
+             <div className="space-y-8">
+               <div className="flex items-center gap-4">
+                 <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center transition-all duration-300 hover:scale-105">
+                   <User className="h-6 w-6 text-muted-foreground transition-colors duration-300 hover:text-primary" />
+                 </div>
+                 <div>
+                   <h4 className="text-lg font-semibold text-muted-foreground transition-colors duration-300 hover:text-primary">{selectedPost.author}</h4>
+                   <p className="text-sm text-muted-foreground/80 transition-colors duration-300 hover:text-primary/70">{selectedPost.category}</p>
+                 </div>
+               </div>
+               <div className="prose prose-lg max-w-none text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: selectedPost.content }} />
+             </div>
+           </>
+         )}
+       </DialogContent>
       </Dialog>
     </div>
   );

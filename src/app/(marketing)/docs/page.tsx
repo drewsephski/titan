@@ -13,9 +13,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
 
 // Type for the icon names to ensure type safety
 type IconName = keyof typeof sectionIcons;

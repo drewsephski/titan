@@ -1,4 +1,5 @@
 export type BlogPost = {
+  image: string;
   id: number;
   title: string;
   excerpt: string;

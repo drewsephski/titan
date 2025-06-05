@@ -115,7 +115,7 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
-            <Link href="/documentation">
+            <Link href="/sign-up">
               <Button
                 size="lg"
                 className={cn(
