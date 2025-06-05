@@ -27,7 +27,7 @@
 
   # Better Auth - required
   BETTER_AUTH_URL = "http://localhost:3000"
-  BETTER_AUTH_SECRET=Vizo94MsrmVjWUyHB03bhooIkriDrOu6
+  BETTER_AUTH_SECRET = "Vizo94MsrmVjWUyHB03bhooIkriDrOu6"
 
   # OAuth Providers (optional)
   GITHUB_CLIENT_ID = ""
