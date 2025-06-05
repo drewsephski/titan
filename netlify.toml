@@ -30,9 +30,7 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-  [plugins.inputs]
-    enableServerComponents = true
-    staticOptimization = true
+  # No inputs needed - uses Next.js 15 defaults
 
 [dev]
   command = "npm run dev"
