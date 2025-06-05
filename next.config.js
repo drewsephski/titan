@@ -2,47 +2,72 @@
 const nextConfig = {
   // Enable React strict mode
   reactStrictMode: true,
-  
+
   // Image optimization configuration
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'picsum.photos',
-        port: '',
-        pathname: '/**',
       },
     ],
   },
-  
-  // Enable SWC minification for better performance
-  swcMinify: true,
-  
+
   // Webpack configuration
   webpack: (config) => {
     // Add any webpack configurations here if needed
     return config;
   },
-  
-  // Experimental features (enable only what you need)
+
+  // Experimental features
   experimental: {
-    // Enable the new React compiler if needed
-    // reactCompiler: true,
-    
-    // Enable server actions with proper type
+    // Server actions configuration
     serverActions: {
-      bodySizeLimit: '2mb',
+      bodySizeLimit: 2 * 1024 * 1024, // 2MB in bytes
     },
-    
+
     // Optimize package imports
     optimizePackageImports: [
       'lucide-react',
       '@radix-ui/react-icons',
     ],
   },
-  
-  // Enable static exports if needed
-  // output: 'export',
+
+  // File extensions to consider for pages
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
+
+  // Enable production source maps
+  productionBrowserSourceMaps: true,
+
+  // Configure output type
+  output: 'standalone',
+
+  // Static page generation timeout (in seconds)
+  staticPageGenerationTimeout: 1000,
+
+  // TypeScript configuration
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+
+  // Compiler options
+  compiler: {
+    // Enable styled-components support
+    styledComponents: true,
+  },
+
+  // Enable React 19 features
+  future: {
+    webpackBuildWorker: true,
+  },
+
+  // Disable the static directory in favor of the app directory
+  useFileSystemPublicRoutes: false,
+
+  // Enable ESLint during build
+  eslint: {
+    ignoreDuringBuilds: false,
+  }
 };
 
 module.exports = nextConfig;
