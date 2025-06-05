@@ -2,11 +2,8 @@
   command = "npm install --legacy-peer-deps && npm run build"
   publish = ".next"
 
-  # Load environment variables from .env file during build
-  environment = { ENV = "production" }
-
 [build.environment]
-  # Node.js and build settings
+  # Node.js settings
   NODE_VERSION = "20"
   NPM_FLAGS = "--legacy-peer-deps"
 
@@ -15,18 +12,12 @@
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
   NEXT_IGNORE_ESLINT = "1"
   NEXT_IGNORE_TYPECHECK = "1"
-
-  # Environment validation - skip in build
   SKIP_ENV_VALIDATION = "true"
   NETLIFY_NEXT_PLUGIN_FORCE_RUN = "true"
 
-  # Required environment variables (set these in Netlify UI)
-  # Database - get this from your Neon dashboard
-  # Format: postgres://user:password@host/dbname?options
+  # Required environment variables
   DATABASE_URL = "postgresql://titan_owner:npg_XiZegLY9bWz7@ep-curly-thunder-a8r4hkmh-pooler.eastus2.azure.neon.tech/titan?sslmode=require"
-
-  # Better Auth - required
-  BETTER_AUTH_URL = "http://localhost:3000"
+  BETTER_AUTH_URL = "https://your-production-url.com"
   BETTER_AUTH_SECRET = "Vizo94MsrmVjWUyHB03bhooIkriDrOu6"
 
   # OAuth Providers (optional)
@@ -39,7 +30,6 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-  # No inputs needed - uses Next.js 15 defaults
 
 [dev]
   command = "npm run dev"
