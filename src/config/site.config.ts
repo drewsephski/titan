@@ -1,10 +1,13 @@
 import { SiteConfig } from "@/types";
 
+// Get the base URL from environment variables or use a default for development
+const siteUrl = process.env['NEXT_PUBLIC_SITE_URL'] || 'http://localhost:3000';
+
 export const siteConfig: SiteConfig = {
   name: "Titan",
   title: "Titan - Powerful Next.js 15 Template with Better-Auth, Drizzle ORM, PostgreSQL, and Shadcn UI",
   description: "Modern Next.js 15 Template Boilerplate with Better-Auth, Drizzle ORM, PostgreSQL, Shadcn UI, and Tailwind v4 for fast, secure web app development.",
-  origin: "https://drew.dev",
+  origin: siteUrl,
   links: [
     "/about",
     "/blog",

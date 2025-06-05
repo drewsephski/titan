@@ -11,9 +11,16 @@
   NEXT_IGNORE_TYPECHECK = "1"
   SKIP_ENV_VALIDATION = "true"
   NETLIFY_NEXT_PLUGIN_FORCE_RUN = "true"
+  
+  # Database
   DATABASE_URL = "postgresql://titan_owner:npg_XiZegLY9bWz7@ep-curly-thunder-a8r4hkmh-pooler.eastus2.azure.neon.tech/titan?sslmode=require"
+  
+  # Auth
   BETTER_AUTH_URL = "https://${URL}/api/auth"
   BETTER_AUTH_SECRET = "Vizo94MsrmVjWUyHB03bhooIkriDrOu6"
+  
+  # Site URL
+  NEXT_PUBLIC_SITE_URL = "https://${URL}"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
