@@ -3,23 +3,35 @@
   publish = ".next"
 
 [build.environment]
+  # Node.js and build settings
   NODE_VERSION = "20"
   NPM_FLAGS = "--legacy-peer-deps"
+  
+  # Next.js optimizations
   NEXT_TELEMETRY_DISABLED = "1"
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
   NEXT_IGNORE_ESLINT = "1"
   NEXT_IGNORE_TYPECHECK = "1"
-  # Skip environment validation during build
+  
+  # Environment validation
   SKIP_ENV_VALIDATION = "true"
-  # Required for Next.js 13+ on Netlify
   NETLIFY_NEXT_PLUGIN_FORCE_RUN = "true"
+  
+  # Application environment variables (set these in Netlify UI)
+  BETTER_AUTH_SECRET = ""
+  BETTER_AUTH_URL = ""
+  DATABASE_URL = ""
+  GITHUB_CLIENT_ID = ""
+  GITHUB_CLIENT_SECRET = ""
+  GOOGLE_CLIENT_ID = ""
+  GOOGLE_CLIENT_SECRET = ""
+  DISCORD_CLIENT_ID = ""
+  DISCORD_CLIENT_SECRET = ""
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
   [plugins.inputs]
-    # Enable server components
     enableServerComponents = true
-    # Enable static optimization
     staticOptimization = true
 
 [dev]
@@ -30,24 +42,5 @@
   framework = "next"
 
 [functions]
-  # Configure functions directory
   directory = ".next/server/functions"
-  # Set the Node.js version for serverless functions
   node_bundler = "esbuild"
-
-# Required environment variables - these must be set in Netlify's environment variables
-[build.environment]
-  # Better Auth
-  BETTER_AUTH_SECRET = ""
-  BETTER_AUTH_URL = ""
-  
-  # Database
-  DATABASE_URL = ""
-  
-  # OAuth Providers (optional)
-  GITHUB_CLIENT_ID = ""
-  GITHUB_CLIENT_SECRET = ""
-  GOOGLE_CLIENT_ID = ""
-  GOOGLE_CLIENT_SECRET = ""
-  DISCORD_CLIENT_ID = ""
-  DISCORD_CLIENT_SECRET = ""
