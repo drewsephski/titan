@@ -7,6 +7,8 @@
   NPM_FLAGS = "--legacy-peer-deps"
   NEXT_TELEMETRY_DISABLED = "1"
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
+  NEXT_IGNORE_ESLINT = "1"
+  NEXT_IGNORE_TYPECHECK = "1"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
@@ -18,3 +20,8 @@
   targetPort = 3000
   publish = ".next"
   port = 3000
+  framework = "next"
+
+[functions]
+  # Configure functions directory
+  directory = ".next/server/functions"

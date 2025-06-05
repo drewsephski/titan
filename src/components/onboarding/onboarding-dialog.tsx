@@ -61,8 +61,8 @@ function OnboardingDialog({ open, onOpenChange, onComplete }: OnboardingDialogPr
       <DialogContent>
         <div className="space-y-6 px-6 pb-6 pt-3">
           <DialogHeader>
-            <DialogTitle>{stepContent[step - 1].title}</DialogTitle>
-            <DialogDescription>{stepContent[step - 1].description}</DialogDescription>
+            <DialogTitle>{stepContent[step - 1]?.title || 'Step'}</DialogTitle>
+            <DialogDescription>{stepContent[step - 1]?.description || ''}</DialogDescription>
           </DialogHeader>
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div className="flex justify-center space-x-1.5 max-sm:order-1">

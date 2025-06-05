@@ -173,7 +173,9 @@ function Particles({
       const r = Math.cbrt(Math.random());
       positions.set([x * r, y * r, z * r], i * 3);
       randoms.set([Math.random(), Math.random(), Math.random(), Math.random()], i * 4);
-      const col = hexToRgb(palette[Math.floor(Math.random() * palette.length)]);
+      const color = palette[Math.floor(Math.random() * palette.length)];
+      if (!color) return;
+      const col = hexToRgb(color);
       colors.set(col, i * 3);
     }
 
@@ -214,7 +216,9 @@ function Particles({
       elapsed += delta * speed;
 
       if (programRef.current) {
-        programRef.current.uniforms.uTime.value = elapsed * 0.001;
+        if (programRef.current?.uniforms?.['uTime']?.value !== undefined) {
+          programRef.current.uniforms['uTime'].value = elapsed * 0.001;
+        }
       }
 
       if (sceneRef.current) {

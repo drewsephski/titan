@@ -2,6 +2,13 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+interface AnimationObject {
+  from?: gsap.TweenVars;
+  to?: gsap.TweenVars;
+  timeline?: (tl: gsap.core.Timeline) => void;
+  [key: string]: any;
+}
+
 gsap.registerPlugin(ScrollTrigger);
 
 interface ScrollAnimationOptions {
@@ -16,7 +23,7 @@ interface ScrollAnimationOptions {
   onLeaveBack?: gsap.Callback;
   once?: boolean;
   toggleActions?: string;
-  animation: gsap.core.Timeline | gsap.core.Tween | gsap.TweenVars;
+  animation: AnimationObject | gsap.TweenVars;
 }
 
 export function useScrollAnimation({
@@ -64,11 +71,13 @@ export function useScrollAnimation({
           },
         });
       } else if ('fromTo' in animation) {
+        const from = 'from' in animation ? (animation as any).from : {};
+        const to = 'to' in animation ? (animation as any).to : {};
         animationRef.current = gsap.fromTo(
           element,
-          animation.from,
+          from,
           {
-            ...animation.to,
+            ...to,
             scrollTrigger: {
               trigger: element,
               start,
@@ -88,7 +97,7 @@ export function useScrollAnimation({
             },
           }
         );
-      } else if ('timeline' in animation) {
+      } else if ('timeline' in animation && typeof animation.timeline === 'function') {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: element,

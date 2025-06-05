@@ -45,14 +45,17 @@ const ShaderMaterial = ({
 
   useFrame(({ clock }) => {
     if (!materialRef.current) return;
-    materialRef.current.uniforms.u_time.value = clock.getElapsedTime();
+    if (materialRef.current?.uniforms?.['u_time']?.value !== undefined) {
+      materialRef.current.uniforms['u_time'].value = clock.getElapsedTime();
+    }
   });
 
   const getUniforms = useCallback(() => {
     const preparedUniforms: Record<string, { value: number[] | number[][] | number; type?: string }> = {};
 
     for (const uniformName in uniforms) {
-      const uniform: { value: number[] | number[][] | number; type: string } = uniforms[uniformName];
+      const uniform = uniforms[uniformName];
+      if (!uniform) return; // Skip if uniform not found
 
       switch (uniform.type) {
         case "uniform1f":
@@ -178,9 +181,9 @@ export const DotMatrix: React.FC<DotMatrixProps> = ({
     return {
       u_colors: {
         value: colorsArray.map((color) => [
-          color[0] / 255,
-          color[1] / 255,
-          color[2] / 255,
+          (color?.[0] || 0) / 255,
+          (color?.[1] || 0) / 255,
+          (color?.[2] || 0) / 255,
         ]),
         type: "uniform3fv",
       },

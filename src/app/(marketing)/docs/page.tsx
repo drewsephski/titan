@@ -248,7 +248,7 @@ export default function DocsPage() {
               <section id="getting-started" className="mt-12 scroll-mt-24">
                 <h2 className="text-2xl font-bold mb-6">Getting Started</h2>
                 <div className="grid gap-6 md:grid-cols-2">
-                  {docsSections[0].items.map((item) => (
+                  {docsSections[0]?.items?.map((item) => item && (
                     <div key={item.href} className="rounded-lg border p-6 hover:shadow-md transition-shadow">
                       <div className="flex items-center mb-3">
                         {renderIcon(item.icon)}
@@ -289,7 +289,7 @@ export default function DocsPage() {
               <section id="core-concepts" className="mt-16 scroll-mt-24">
                 <h2 className="text-2xl font-bold mb-6">Core Concepts</h2>
                 <div className="grid gap-6 md:grid-cols-2">
-                  {docsSections[1].items.map((item) => (
+                  {docsSections[1]?.items?.map((item) => item && (
                     <Dialog key={item.href}>
                       <DialogTrigger asChild>
                         <div className="rounded-lg border p-6 hover:shadow-md transition-shadow">
@@ -330,7 +330,7 @@ export default function DocsPage() {
               <section id="guides" className="mt-16 scroll-mt-24">
                 <h2 className="text-2xl font-bold mb-6">Guides</h2>
                 <div className="grid gap-6 md:grid-cols-2">
-                  {docsSections[2].items.map((item) => (
+                  {docsSections[2]?.items?.map((item) => item && (
                     <Dialog key={item.href}>
                       <DialogTrigger asChild>
                         <div className="rounded-lg border p-6 hover:shadow-md transition-shadow">

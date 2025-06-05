@@ -131,7 +131,7 @@ export const BlogPostCard: React.FC<BlogPostCardProps> = ({ post, isFeatured = f
            </div>
          </div>
 
-         <div className={`${styles.blogPostContent} prose max-w-none`}>
+         <div className={`${styles['blogPostContent']} prose max-w-none`}>
            <div dangerouslySetInnerHTML={{ __html: post.content }} />
          </div>
 
