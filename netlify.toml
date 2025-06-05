@@ -17,7 +17,7 @@
 
   # Required environment variables
   DATABASE_URL = "postgresql://titan_owner:npg_XiZegLY9bWz7@ep-curly-thunder-a8r4hkmh-pooler.eastus2.azure.neon.tech/titan?sslmode=require"
-  BETTER_AUTH_URL = "https://your-production-url.com"
+  BETTER_AUTH_URL = "/api/auth"  # Relative URL for Next.js API routes
   BETTER_AUTH_SECRET = "Vizo94MsrmVjWUyHB03bhooIkriDrOu6"
 
   # OAuth Providers (optional)
